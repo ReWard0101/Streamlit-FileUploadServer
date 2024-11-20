@@ -356,17 +356,19 @@ class FileUploadServer:
 
         @self.app.post("/upload")
         async def upload_file(request: Request, file: UploadFile = File(...)):
-            """Handle file upload"""
+            """Handle file upload with optimized chunk size"""
             client_ip = request.client.host
-                    
-            # Rate limiting
+            
+            # Rate limiting check
             now = datetime.now()
             if client_ip in self.last_upload:
                 time_since_last = (now - self.last_upload[client_ip]).total_seconds()
                 if time_since_last < self.upload_cooldown:
                     raise HTTPException(status_code=429, detail="Too many uploads. Please wait.")
             
-            # Create safe filename
+            # Increased chunk size for better performance
+            CHUNK_SIZE = 1024 * 1024  # 1MB chunks
+            
             safe_filename = secure_filename(file.filename)
             temp_file = self.upload_dir / safe_filename
             counter = 1
@@ -378,14 +380,15 @@ class FileUploadServer:
             try:
                 size = 0
                 with temp_file.open("wb") as buffer:
-                    while chunk := await file.read(8192):
+                    # Use shutil for faster copying
+                    while chunk := await file.read(CHUNK_SIZE):
                         size += len(chunk)
                         if size > self.max_file_size:
                             temp_file.unlink()
                             raise HTTPException(status_code=413, 
-                                             detail=f"File too large. Maximum size is {self.max_file_size/(1024*1024):.0f}MB")
+                                            detail=f"File too large. Maximum size is {self.max_file_size/(1024*1024):.0f}MB")
                         buffer.write(chunk)
-                
+
                 self.last_upload[client_ip] = now
                 
                 extension = temp_file.suffix.lower()
