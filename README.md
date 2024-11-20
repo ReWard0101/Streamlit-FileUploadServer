@@ -1,15 +1,13 @@
 # Streamlit File Upload Server
 
-FastAPI-powered file upload server with Streamlit frontend, supporting CSV, XLSX, GZ, and JSON files.
+FastAPI-powered file upload server with Streamlit frontend.
 
 ## Features
 
-- Drag-and-drop uploads
-- Progress tracking
-- Rate limiting
-- File previews
+- Uploads will be streamed directly to disk, no RAM overhead
+- Rate limiting ( same as st.file_uploader())
 - Automatic 24h cleanup
-- Secure file handling
+- Cleanup at start/stop
 
 ## Install
 
@@ -39,12 +37,6 @@ maxUploadSize = 400
 - Preview: First 5 rows/lines
 - Supports: `.csv`, `.xlsx`, `.gz`, `.json`
 
-## Security
-
-- Secure filenames
-- Rate limiting per IP
-- Auto cleanup
-- CORS enabled
 
 ## Files
 
