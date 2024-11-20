@@ -5,7 +5,7 @@ FastAPI-powered file upload server with Streamlit frontend.
 ## Features
 
 - Uploads will be streamed directly to disk, no RAM overhead
-- Rate limiting ( same as st.file_uploader())
+- Rate limiting (same as st.file_uploader())
 - Automatic 24h cleanup
 - Cleanup at start/stop
 
