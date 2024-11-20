@@ -1,15 +1,21 @@
 # Streamlit File Upload Server
 
-FastAPI-powered file upload server with Streamlit frontend, supporting CSV, XLSX, GZ, and JSON files.
+FastAPI-powered file upload server with Streamlit frontend.
+
+## Example of RAM overhead
+Using st.file_uploader on a 1.2GB File:
+![mrpof_plot_streamlit_file_uploader](https://github.com/user-attachments/assets/1ec909fd-8bca-45a0-9d55-4cd5dd525eb3)
+
+Using this fastapi upload server on a 1.2GB File:
+![mprof_plot_direct_upload](https://github.com/user-attachments/assets/90c78a98-8f35-4fe8-aad4-c162a5230fea)
+
 
 ## Features
 
-- Drag-and-drop uploads
-- Progress tracking
-- Rate limiting
-- File previews
+- Uploads will be streamed directly to disk, no RAM overhead
+- Rate limiting (same as st.file_uploader())
 - Automatic 24h cleanup
-- Secure file handling
+- Cleanup at start/stop
 
 ## Install
 
@@ -39,12 +45,6 @@ maxUploadSize = 400
 - Preview: First 5 rows/lines
 - Supports: `.csv`, `.xlsx`, `.gz`, `.json`
 
-## Security
-
-- Secure filenames
-- Rate limiting per IP
-- Auto cleanup
-- CORS enabled
 
 ## Files
 
@@ -52,6 +52,7 @@ maxUploadSize = 400
 main.py                 # Streamlit app
 modules/
   upload_server.py      # FastAPI server
+
 requirements.txt
 ```
 
